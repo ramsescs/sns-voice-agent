@@ -1,0 +1,48 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Edit",
+      "Write",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git show *)",
+      "Bash(git branch *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(python3 *)",
+      "Bash(pip install *)",
+      "Bash(pip list*)",
+      "Bash(ruff *)",
+      "Bash(pytest *)",
+      "Bash(mkdir *)",
+      "Bash(ls *)",
+      "Bash(find *)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(git push --force*)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean -f*)"
+    ],
+    "ask": [
+      "Bash(git push*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path' | { read -r f; case \"$f\" in *.py) ruff format \"$f\" && ruff check --fix \"$f\";; esac; } 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
+  }
+}
