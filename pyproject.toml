@@ -12,6 +12,7 @@ dependencies = [
     "pydantic>=2",
     "pyyaml",
     "pytest",
+    "python-dotenv",
 ]
 
 [tool.setuptools.packages.find]

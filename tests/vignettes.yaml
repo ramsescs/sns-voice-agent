@@ -1,0 +1,194 @@
+# Findings -> expected SET level, seeding the thesis's stratified
+# under-triage benchmark (not throwaway — see issues/003).
+#
+# Each vignette gives ClinicalFindings input and the level / care channel /
+# uncertainty the set_engine must produce for it.
+
+- id: chest_pain_severe_pain
+  findings:
+    presenting_complaint: chest_pain
+    pain_score: 9
+  expected_level: 2
+  expected_care_channel: "emergency/112"
+  expected_uncertainty: false
+
+- id: chest_pain_radiating
+  findings:
+    presenting_complaint: chest_pain
+    pain_score: 3
+    chest_pain_radiating: true
+  expected_level: 2
+  expected_care_channel: "emergency/112"
+  expected_uncertainty: false
+
+- id: chest_pain_moderate_pain
+  findings:
+    presenting_complaint: chest_pain
+    pain_score: 6
+  expected_level: 3
+  expected_care_channel: "urgent care"
+  expected_uncertainty: false
+
+- id: chest_pain_mild_pain
+  findings:
+    presenting_complaint: chest_pain
+    pain_score: 2
+  expected_level: 4
+  expected_care_channel: "primary-care appointment"
+  expected_uncertainty: false
+
+- id: chest_pain_zero_pain
+  findings:
+    presenting_complaint: chest_pain
+    pain_score: 0
+  expected_level: 4
+  expected_care_channel: "primary-care appointment"
+  expected_uncertainty: false
+
+- id: chest_pain_missing_data
+  findings:
+    presenting_complaint: chest_pain
+  expected_level: 3
+  expected_care_channel: "urgent care"
+  expected_uncertainty: true
+
+- id: breathing_difficulty_severe
+  findings:
+    presenting_complaint: breathing_difficulty
+    breathing_difficulty: severe
+  expected_level: 1
+  expected_care_channel: "emergency/112"
+  expected_uncertainty: false
+
+- id: breathing_difficulty_mild
+  findings:
+    presenting_complaint: breathing_difficulty
+    breathing_difficulty: mild
+  expected_level: 3
+  expected_care_channel: "urgent care"
+  expected_uncertainty: false
+
+- id: breathing_difficulty_none
+  findings:
+    presenting_complaint: breathing_difficulty
+    breathing_difficulty: none
+  expected_level: 4
+  expected_care_channel: "primary-care appointment"
+  expected_uncertainty: false
+
+- id: breathing_difficulty_missing_data
+  findings:
+    presenting_complaint: breathing_difficulty
+  expected_level: 2
+  expected_care_channel: "emergency/112"
+  expected_uncertainty: true
+
+- id: fever_drowsy
+  findings:
+    presenting_complaint: fever
+    consciousness: drowsy
+  expected_level: 1
+  expected_care_channel: "emergency/112"
+  expected_uncertainty: false
+
+- id: fever_high_pain
+  findings:
+    presenting_complaint: fever
+    pain_score: 8
+  expected_level: 3
+  expected_care_channel: "urgent care"
+  expected_uncertainty: false
+
+- id: fever_low_pain
+  findings:
+    presenting_complaint: fever
+    pain_score: 1
+  expected_level: 5
+  expected_care_channel: "self-care"
+  expected_uncertainty: false
+
+- id: fever_moderate_pain
+  findings:
+    presenting_complaint: fever
+    pain_score: 5
+  expected_level: 4
+  expected_care_channel: "primary-care appointment"
+  expected_uncertainty: false
+
+- id: fever_missing_data
+  findings:
+    presenting_complaint: fever
+  expected_level: 3
+  expected_care_channel: "urgent care"
+  expected_uncertainty: true
+
+- id: abdominal_pain_severe_pain
+  findings:
+    presenting_complaint: abdominal_pain
+    pain_score: 9
+  expected_level: 2
+  expected_care_channel: "emergency/112"
+  expected_uncertainty: false
+
+- id: abdominal_pain_severe_bleeding
+  findings:
+    presenting_complaint: abdominal_pain
+    pain_score: 1
+    bleeding: severe
+  expected_level: 2
+  expected_care_channel: "emergency/112"
+  expected_uncertainty: false
+
+- id: abdominal_pain_moderate_pain
+  findings:
+    presenting_complaint: abdominal_pain
+    pain_score: 6
+  expected_level: 3
+  expected_care_channel: "urgent care"
+  expected_uncertainty: false
+
+- id: abdominal_pain_minimal_pain
+  findings:
+    presenting_complaint: abdominal_pain
+    pain_score: 0
+  expected_level: 5
+  expected_care_channel: "self-care"
+  expected_uncertainty: false
+
+- id: abdominal_pain_missing_data
+  findings:
+    presenting_complaint: abdominal_pain
+  expected_level: 3
+  expected_care_channel: "urgent care"
+  expected_uncertainty: true
+
+- id: wound_severe_bleeding
+  findings:
+    presenting_complaint: wound
+    bleeding: severe
+  expected_level: 2
+  expected_care_channel: "emergency/112"
+  expected_uncertainty: false
+
+- id: wound_minor_bleeding
+  findings:
+    presenting_complaint: wound
+    bleeding: minor
+  expected_level: 4
+  expected_care_channel: "primary-care appointment"
+  expected_uncertainty: false
+
+- id: wound_no_bleeding
+  findings:
+    presenting_complaint: wound
+    bleeding: none
+  expected_level: 5
+  expected_care_channel: "self-care"
+  expected_uncertainty: false
+
+- id: wound_missing_data
+  findings:
+    presenting_complaint: wound
+  expected_level: 4
+  expected_care_channel: "primary-care appointment"
+  expected_uncertainty: true
