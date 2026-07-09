@@ -20,7 +20,8 @@
       "Bash(pytest *)",
       "Bash(mkdir *)",
       "Bash(ls *)",
-      "Bash(find *)"
+      "Bash(find *)",
+      "Bash(git push*)"
     ],
     "deny": [
       "Bash(rm -rf *)",
@@ -29,7 +30,6 @@
       "Bash(git clean -f*)"
     ],
     "ask": [
-      "Bash(git push*)"
     ]
   },
   "hooks": {
