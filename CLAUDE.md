@@ -4,7 +4,28 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project state
 
-This repository currently contains only planning documents for a bachelor's thesis (TFG) — there is no application code, build system, package manifest, or test suite yet. There are no build/lint/test commands to run.
+This repository contains a working MVP implementation (`src/triage/`: dialogue manager, deterministic SET engine, red-flag detector, orchestrator, CLI, audit trail) plus a pytest suite (`tests/`), alongside the thesis planning documents.
+
+## Git workflow
+
+One branch per issue slice. When implementing an `issues/00N-*.md` file:
+
+1. `git checkout main && git pull`
+2. `git checkout -b feat/00N-<slug>` (e.g. `feat/004-audit-log`)
+3. Implement, commit incrementally on that branch
+4. `gh pr create` once the acceptance criteria pass
+5. Merge the PR, then return to `main` for the next slice
+
+Never commit work from multiple slices onto the same branch. Stage files explicitly by name — never `git add -A` or `git add .` — to avoid accidentally bundling unrelated changes.
+
+## Running tests
+
+Run tests with the bare `pytest` command (not `python3 -m pytest`), so the rtk Claude Code hook can recognize and compact the output:
+
+```bash
+pytest
+pytest tests/test_orchestrator.py
+```
 
 ## What this project is
 
