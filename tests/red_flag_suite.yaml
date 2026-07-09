@@ -1,0 +1,35 @@
+# Red-flag scenarios that MUST escalate. Target: 100% recall.
+# Each scenario is a findings dict that should make `redflag.check()` fire.
+scenarios:
+  - name: chest_pain_radiating_to_arm
+    findings:
+      presenting_complaint: chest_pain
+      chest_pain: true
+      chest_pain_radiating: true
+      pain_score: 8
+
+  - name: stroke_fast_positive
+    findings:
+      presenting_complaint: breathing_difficulty
+      stroke_signs_fast: true
+
+  - name: severe_breathing_difficulty
+    findings:
+      presenting_complaint: breathing_difficulty
+      breathing_difficulty: severe
+
+  - name: anaphylaxis
+    findings:
+      presenting_complaint: wound
+      allergic_reaction_severe: true
+
+  - name: suicidal_ideation_expressed
+    findings:
+      presenting_complaint: abdominal_pain
+      suicidal_ideation: true
+
+  - name: multiple_red_flags_at_once
+    findings:
+      presenting_complaint: chest_pain
+      chest_pain_radiating: true
+      stroke_signs_fast: true
