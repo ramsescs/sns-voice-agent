@@ -134,29 +134,52 @@ class DialogueManager:
 
     def step(self, user_text: str) -> DialogueTurn:
         self._history.append(
-            types.Content(role="user", parts=[types.Part(text=user_text)])
+            types.Content(role="user", parts=[types.Part.from_text(text=user_text)])
         )
-        response = self._client.models.generate_content(
-            model=self.model,
-            contents=self._history,
-            config=types.GenerateContentConfig(
-                system_instruction=SYSTEM_PROMPT,
-                tools=TOOLS,
-            ),
-        )
-        return self._process_response(response)
-
-    def _process_response(self, response: Any) -> DialogueTurn:
-        candidate = response.candidates[0]
-        self._history.append(candidate.content)
-
+        
         turn = DialogueTurn()
-        for part in candidate.content.parts or []:
-            function_call = getattr(part, "function_call", None)
-            if function_call is not None:
-                self._dispatch_tool_call(function_call, turn)
-            elif getattr(part, "text", None):
-                turn.reply_text = (turn.reply_text or "") + part.text
+        while True:
+            response = self._client.models.generate_content(
+                model=self.model,
+                contents=self._history,
+                config=types.GenerateContentConfig(
+                    system_instruction=SYSTEM_PROMPT,
+                    tools=TOOLS,
+                ),
+            )
+            candidate = response.candidates[0]
+            self._history.append(candidate.content)
+
+            has_function_call = False
+            function_responses = []
+
+            for part in candidate.content.parts or []:
+                function_call = getattr(part, "function_call", None)
+                if function_call is not None:
+                    has_function_call = True
+                    self._dispatch_tool_call(function_call, turn)
+                    
+                    response_dict = {"status": "ok"}
+                    if turn.rejected_update:
+                        response_dict = {"error": turn.rejected_update}
+                        
+                    function_responses.append(
+                        types.Part.from_function_response(
+                            name=function_call.name, 
+                            response=response_dict
+                        )
+                    )
+                elif getattr(part, "text", None):
+                    turn.reply_text = (turn.reply_text or "") + part.text
+            
+            if has_function_call:
+                self._history.append(types.Content(parts=function_responses))
+                # If finalized, we can stop the loop early. The orchestrator takes over.
+                if turn.finalized:
+                    break
+            else:
+                break
+                
         return turn
 
     def _dispatch_tool_call(self, function_call: Any, turn: DialogueTurn) -> None:

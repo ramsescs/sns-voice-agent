@@ -31,8 +31,9 @@ class _FakeClient:
 
 def test_update_findings_tool_call_becomes_validated_findings_update():
     args = {"presenting_complaint": "chest_pain", "pain_score": 7}
-    response = _response([_part(function_call=_function_call("update_findings", args))])
-    client = _FakeClient([response])
+    response1 = _response([_part(function_call=_function_call("update_findings", args))])
+    response2 = _response([_part(text="Got it.")])
+    client = _FakeClient([response1, response2])
     manager = DialogueManager(client)
 
     turn = manager.step("My chest hurts a lot.")
@@ -49,7 +50,9 @@ def test_invalid_update_findings_payload_is_rejected_without_corrupting_state():
     bad_args = {"pain_score": 99}
     responses = [
         _response([_part(function_call=_function_call("update_findings", good_args))]),
+        _response([_part(text="OK.")]),
         _response([_part(function_call=_function_call("update_findings", bad_args))]),
+        _response([_part(text="Got it.")]),
     ]
     client = _FakeClient(responses)
     manager = DialogueManager(client)
@@ -75,6 +78,7 @@ def test_update_findings_merges_partial_updates_across_turns():
                 )
             ]
         ),
+        _response([_part(text="Okay.")]),
         _response(
             [
                 _part(
@@ -84,6 +88,7 @@ def test_update_findings_merges_partial_updates_across_turns():
                 )
             ]
         ),
+        _response([_part(text="Thanks.")]),
     ]
     client = _FakeClient(responses)
     manager = DialogueManager(client)
